@@ -1,7 +1,8 @@
 package com.o625.oddmutou.smartmirror;
 
 import android.annotation.SuppressLint;
-import android.icu.util.Calendar;
+import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+
+import java.util.Date;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -121,13 +124,11 @@ public class FullscreenMainActivity extends AppCompatActivity {
     }
 
     private void viewDatetime () {
-        Calendar cal = Calendar.getInstance();
-
-        String strDatetime = cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DATE) + "\n"
-            + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND);
+        final DateFormat df = new SimpleDateFormat("yyyy/MM/dd\nHH:mm:ss");
+        final Date date = new Date(System.currentTimeMillis());
 
         TextView tv = (TextView)findViewById(R.id.fullscreen_content);
-        tv.setText(strDatetime);
+        tv.setText(df.format(date));
     }
 
     @Override
