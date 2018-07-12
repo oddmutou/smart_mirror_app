@@ -108,7 +108,16 @@ public class FullscreenMainActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
 
-        viewDatetime();
+        final Handler handler = new Handler();
+        final Runnable r = new Runnable() {
+            int count = 0;
+            @Override
+            public void run() {
+                viewDatetime();
+                handler.postDelayed(this, 1000);
+            }
+        };
+        handler.post(r);
     }
 
     private void viewDatetime () {
