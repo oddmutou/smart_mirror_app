@@ -1,17 +1,24 @@
 package com.o625.oddmutou.smartmirror;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
+import android.provider.CalendarContract;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -121,10 +128,11 @@ public class FullscreenMainActivity extends AppCompatActivity {
             }
         };
         handler.post(r);
+        viewEvents();
     }
 
     private void viewDatetime () {
-        final DateFormat df = new SimpleDateFormat("yyyy/MM/dd\nHH:mm:ss");
+        final DateFormat df = new SimpleDateFormat("yyyy/MM/dd  HH:mm:ss");
         final Date date = new Date(System.currentTimeMillis());
 
         TextView tv = (TextView)findViewById(R.id.fullscreen_content);
@@ -182,5 +190,55 @@ public class FullscreenMainActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    private void viewEvents() {
+        ArrayList<String> calendarIds = new ArrayList<>();
+        String eventString = "";
+        ContentResolver resolver = getContentResolver();
+
+        String[] projection1 = {
+                CalendarContract.Calendars._ID,
+        };
+        String selection1 = "((" + CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL + " = ?))";
+        String[] selectionArgs1 = new String[]{"700"};
+        Cursor calendarCursor = resolver.query(CalendarContract.Calendars.CONTENT_URI, projection1, selection1, selectionArgs1, null);
+        for (boolean hasNext = calendarCursor.moveToFirst(); hasNext; hasNext = calendarCursor.moveToNext()) {
+            String id = calendarCursor.getString(0);
+            calendarIds.add(calendarCursor.getString(0));
+        }
+        calendarCursor.close();
+
+        for (int count = 0; count < calendarIds.size(); count++) {
+            long start = System.currentTimeMillis();
+            long diff = 604800000; //1000 * 60 * 60 * 24 * 7
+            long end = start + diff;
+
+            String[] projection2 = {
+                    CalendarContract.Events._ID,
+                    CalendarContract.Events.TITLE,
+                    CalendarContract.Events.DTSTART,
+                    CalendarContract.Events.DTEND,
+            };
+            String selection2 = "((" + CalendarContract.Events.DTSTART + " >= ?)"
+                    + " AND (" + CalendarContract.Events.DTEND + " <= ?)"
+                    + " AND (" + CalendarContract.Events.CALENDAR_ID + " = ?))";
+            String[] selectionArgs2 = new String[]{Long.toString(start), Long.toString(end), calendarIds.get(count)};
+            String sortOrder2 = CalendarContract.Events.DTEND + " DESC LIMIT 10";
+
+            Cursor cursor = resolver.query(CalendarContract.Events.CONTENT_URI, projection2, selection2, selectionArgs2, sortOrder2);
+            for (boolean hasNext = cursor.moveToFirst(); hasNext; hasNext = cursor.moveToNext()) {
+                String title = cursor.getString(1);
+                long startSec = cursor.getLong(2);
+                long endSec = cursor.getLong(3);
+
+                SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm", Locale.JAPAN);
+                eventString += "\n" + title + "\n       (" + format.format(startSec) + "-" + format.format(endSec);
+            }
+            cursor.close();
+
+        }
+        TextView tv = (TextView)findViewById(R.id.event_textview);
+        tv.setText(eventString);
     }
 }

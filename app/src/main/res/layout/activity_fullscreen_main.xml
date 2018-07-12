@@ -12,8 +12,9 @@
         android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="top|center"
         android:keepScreenOn="true"
+        android:text="loading..."
         android:textColor="#ffffff"
         android:textSize="50sp"
         android:textStyle="bold" />
@@ -37,5 +38,20 @@
 
         </LinearLayout>
     </FrameLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </GridLayout>
+
+    <TextView
+        android:id="@+id/event_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:gravity="bottom|left"
+        android:text="loading..." />
 
 </FrameLayout>
