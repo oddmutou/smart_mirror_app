@@ -1,12 +1,14 @@
 package com.o625.oddmutou.smartmirror;
 
 import android.annotation.SuppressLint;
+import android.icu.util.Calendar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -105,6 +107,18 @@ public class FullscreenMainActivity extends AppCompatActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
+
+        viewDatetime();
+    }
+
+    private void viewDatetime () {
+        Calendar cal = Calendar.getInstance();
+
+        String strDatetime = cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DATE) + "\n"
+            + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND);
+
+        TextView tv = (TextView)findViewById(R.id.fullscreen_content);
+        tv.setText(strDatetime);
     }
 
     @Override
