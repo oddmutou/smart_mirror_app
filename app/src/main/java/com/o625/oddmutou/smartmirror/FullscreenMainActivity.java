@@ -237,8 +237,8 @@ public class FullscreenMainActivity extends AppCompatActivity {
                 long startSec = cursor.getLong(2);
                 long endSec = cursor.getLong(3);
 
-                SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm", Locale.JAPAN);
-                eventString += "\n" + title + "\n       (" + format.format(startSec) + "-" + format.format(endSec);
+                SimpleDateFormat format = new SimpleDateFormat("MM/dd HH:mm", Locale.JAPAN);
+                eventString = title + "\n       (" + format.format(startSec) + " → " + format.format(endSec) + ")\n" + eventString;
             }
             cursor.close();
 

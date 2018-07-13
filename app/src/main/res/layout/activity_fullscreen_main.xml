@@ -12,11 +12,11 @@
         android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="top|center"
+        android:gravity="bottom|center"
         android:keepScreenOn="true"
         android:text="loading..."
         android:textColor="#ffffff"
-        android:textSize="50sp"
+        android:textSize="90sp"
         android:textStyle="bold" />
 
     <!-- This FrameLayout insets its children based on system windows using
@@ -50,8 +50,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textColor="#ffffff"
-        android:textSize="20sp"
-        android:gravity="bottom|left"
+        android:textSize="40sp"
+        android:gravity="center|left"
+        android:textStyle="bold"
         android:text="loading..." />
 
 </FrameLayout>
